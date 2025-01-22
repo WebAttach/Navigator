@@ -5,5 +5,5 @@ services:
     region: oregon
     dockerfilePath: Dockerfile
     buildCommand: ""
-    startCommand: ""
+    startCommand: "python app.py"
     plan: free
