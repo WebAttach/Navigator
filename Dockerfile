@@ -10,11 +10,11 @@ COPY . /app
 # Install any needed packages
 RUN pip install flask
 
-# Set FLASK_APP environment variable
-ENV FLASK_APP=app.py
+# Set environment variable for Flask
+ENV FLASK_APP=app:app
 
-# Make port 5000 available to the outside world
+# Expose the port Flask will run on
 EXPOSE 5000
 
-# Command to run the application
+# Define the default command
 CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
