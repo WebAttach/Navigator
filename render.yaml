@@ -1,0 +1,9 @@
+services:
+  - name: flask-hello-world
+    type: web
+    env: docker
+    region: oregon
+    dockerfilePath: Dockerfile
+    buildCommand: ""
+    startCommand: ""
+    plan: free
