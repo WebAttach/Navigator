@@ -89,7 +89,7 @@ HTML_TEMPLATE = """
         <h4>Getting Started</h4>
           <a href="#" event.preventDefault();">Introduction</a><br>
         <h4>Roles</h4>
-          <a href="#" event.preventDefault();">Payroll</a><br>
+          <a href="#" event.preventDefault();">Payroll Services</a><br>
           <a href="#" event.preventDefault();">Budget</a><br>
           <a href="#" event.preventDefault();">System Analyst</a><br>          
           <a href="#" event.preventDefault();">Add Role</a><br>
