@@ -7,7 +7,8 @@ app = Flask(__name__)
 DB_NAME = 'nav.nv'
 db_config = {
     "nav.nv": {
-        "commands": "CREATE TABLE IF NOT EXISTS commands (id INTEGER PRIMARY KEY, commandtitle TEXT, command TEXT, commandlog TEXT)"
+        "commands": "CREATE TABLE IF NOT EXISTS commands (id INTEGER PRIMARY KEY, commandtitle TEXT, command TEXT, commandlog TEXT)",
+        "glba": "CREATE TABLE IF NOT EXISTS glba (id INTEGER PRIMARY KEY, uniquekey TEXT, fqastring TEXT, commandlog TEXT)"
     }
 }
     
@@ -21,41 +22,6 @@ def init_db():
         conn.close()
 
 init_db() 
-
-
-CONFIG_YAML = """
-app:
-  title: "Analyst Navigator - City Gov Edition"
-  theme: "light"
-DOM:
-  top-bar:
-    h4: "Analyst Navigator - City Gov Edition"
-    user-circle: "CA"
-  bottom-bar:
-    text: "Analyst Navigator  2025"
-  left-section:
-    views:
-      Set Up:
-        items:
-          - "Getting Started"
-          - "Site Survey"
-          - "Layout"
-          - "Auto Actions"
-      Roles:
-        items:
-          - "Budget"
-          - "Payroll"
-          - "Stores Warehouse"
-          - "Add Role"
-  main-section:
-    views:
-      Getting Started:
-        descripton: "Introduction to Set Up Steps leading to Role-based menus and functionality."
-        headline: "Welcome"
-        textline:
-          - Set Up a couple Roles for demo can take between 10-30 minutes.
-          - Implementation of a Role is a 2-4 week process including testing.
-"""
 
 
 
@@ -79,6 +45,65 @@ HTML_TEMPLATE = """
            .hidden{display:none}
            .show{display:block}
     </style>
+    <script src="https://videopal.me/js/vp_player.min.js?v=1.1.29" data-cfasync="false"></script>
+    <script>
+        var vpPlayer = new VpPlayer({
+        embedId: "xazm5GauH3JT"
+        });
+     </script>
+     <script>
+           function sendCommand() {
+                const commandInput = document.getElementById('command-input');
+                const command = commandInput.value.trim();
+                if (command === "content") {
+                }else if(command == 'erp'){
+                    window.open('/erp', '_blank');
+                }else if(command == 'maps'){
+                    window.open('/maps', '_blank');  
+                }else if (command ==='tasks') {
+                    showTasks()
+                }else if (command === 'cls') {
+                    document.getElementById('main-section').innerHTML = '';
+                }else if (command.startsWith('lang-')) {
+                    const langCommand = command.slice(5);
+                    fetch(`/lang?input=${encodeURIComponent(langCommand)}`)
+                    .then(response => {
+                        if (!response.ok) throw new Error("Failed to fetch the language result.");
+                            return response.text();
+                        })
+                        .then(data => {
+                            document.getElementById('main-section').innerHTML = data;
+                        })
+                        .catch(error => {
+                            document.getElementById('main-section').innerHTML = `<p>Error: ${error.message}</p>`;
+                        });
+                }else if (command.startsWith('omni-')) {
+                     const langCommand = command.slice(5); 
+                     fetch(`/omni?input=${encodeURIComponent(langCommand)}`)
+                     .then(response => {
+                        if (!response.ok) throw new Error("Failed to fetch the language result.");
+                            return response.text();
+                        })
+                        .then(data => {
+                            document.getElementById('main-section').innerHTML = data;
+                        })
+                        .catch(error => {
+                            document.getElementById('main-section').innerHTML = `<p>Error: ${error.message}</p>`;
+                        });
+                }else {
+                    document.getElementById('main-section').innerHTML = `<p>Unknown command: ${command}</p>`;
+                }
+            }
+            async function showTasks() {
+                var panh = `<div class="panel-container" id="panel-container">
+               <div class="card"><img src="https://github.com/WebAttach/WebAttach/blob/fd2f9b87483893e7769f07d9f82a4137db73324e/panel_1.jpg?raw=true" alt="Legacy Report"><div class="card-content"><h3>Reports</h3><div class="due-date"><svg class="calendar-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 32 32" aria-hidden="true"><path d="M26,4h-4V2h-2v2h-8V2h-2v2H6C4.9,4,4,4.9,4,6v20c0,1.1,0.9,2,2,2h20c1.1,0,2-0.9,2-2V6C28,4.9,27.1,4,26,4z M26,26H6V12h20V26z M26,10H6V6h4v2h2V6h8v2h2V6h4V10z"></path></svg><span>12/15/2024</span></div></div><div class="card-footer"><a href="#" class="continue-btn" onclick="showIframe()">Proceed</a></div></div>
+       <div class="card"><img src="https://github.com/WebAttach/WebAttach/blob/fd2f9b87483893e7769f07d9f82a4137db73324e/panel_2.jpg?raw=true" alt="Legacy Report"><div class="card-content"><h3>Forms</h3><div class="due-date"><svg class="calendar-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 32 32" aria-hidden="true"><path d="M26,4h-4V2h-2v2h-8V2h-2v2H6C4.9,4,4,4.9,4,6v20c0,1.1,0.9,2,2,2h20c1.1,0,2-0.9,2-2V6C28,4.9,27.1,4,26,4z M26,26H6V12h20V26z M26,10H6V6h4v2h2V6h8v2h2V6h4V10z"></path></svg><span>12/15/2024</span></div></div><div class="card-footer"><a href="#" class="continue-btn" onclick="showIframe()">Proceed</a></div></div>
+<div class="card"><img src="https://github.com/WebAttach/WebAttach/blob/fd2f9b87483893e7769f07d9f82a4137db73324e/panel_3.jpg?raw=true" alt="Legacy Report"><div class="card-content"><h3>Workflow</h3><div class="due-date"><svg class="calendar-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 32 32" aria-hidden="true"><path d="M26,4h-4V2h-2v2h-8V2h-2v2H6C4.9,4,4,4.9,4,6v20c0,1.1,0.9,2,2,2h20c1.1,0,2-0.9,2-2V6C28,4.9,27.1,4,26,4z M26,26H6V12h20V26z M26,10H6V6h4v2h2V6h8v2h2V6h4V10z"></path></svg><span>12/15/2024</span></div></div><div class="card-footer"><a href="#" class="continue-btn" onclick="showIframe()">Proceed</a></div></div>
+    </div>`;
+                document.getElementById('main-section').innerHTML = panh; // Assign the HTML string to innerHTML
+            }
+
+        </script>
 </head>
 <body>
     <div class="top-bar">
@@ -89,10 +114,10 @@ HTML_TEMPLATE = """
         <h4>Getting Started</h4>
           <a href="#" event.preventDefault();">Introduction</a><br>
         <h4>Roles</h4>
-          <a href="#" event.preventDefault();">Payroll Services</a><br>
+          <a href="#" event.preventDefault();">Payroll</a><br>
           <a href="#" event.preventDefault();">Budget</a><br>
           <a href="#" event.preventDefault();">System Analyst</a><br>          
-          <a href="#" event.preventDefault();">Add Role</a><br>
+          <a href="#" event.preventDefault();">Add Roles</a><br>
         <h4>Tasks</h4>
           <a href="#" event.preventDefault();">Produce Report</a><br>
           <a href="#" event.preventDefault();">Process Timecard</a><br>
@@ -123,6 +148,59 @@ HTML_TEMPLATE = """
 @app.route('/')
 def index():
     return render_template_string(HTML_TEMPLATE)
+    
+@app.route('/maps')
+def maps():
+    try:
+        # Replace with your ASHX endpoint URL
+        ashx_url = "https://earth.google.com/earth/d/1WqAG7imU2pofn12dq-kDE4NoyywNTQ8I?usp=sharing"
+        # Redirect to ASHX URL in a new tab
+        return f"""
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <title>Viewer</title>
+            <script>
+                window.onload = function() {{
+                    // Open the ASHX URL in a new tab
+                    window.open("{ashx_url}", "_blank");
+                }};
+            </script>
+        </head>
+        <body>
+            <h3>Opening Maps</h3>
+        </body>
+        </html>
+        """
+    except Exception as e:
+        return jsonify({"error": f"Failed to connect to ASHX: {str(e)}"})
+ 
+@app.route('/erp')
+def erp():
+    try:
+        # Replace with your ASHX endpoint URL
+        ashx_url = "https://workflow-viewer.odoo.com/odoo"
+        # Redirect to ASHX URL in a new tab
+        return f"""
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <title>Viewer</title>
+            <script>
+                window.onload = function() {{
+                    // Open the ASHX URL in a new tab
+                    window.open("{ashx_url}", "_blank");
+                }};
+            </script>
+        </head>
+        <body>
+            <h3>Opening Viewer...featuring Screens, Forms, and Reports with improved functionality</h3>
+        </body>
+        </html>
+        """
+    except Exception as e:
+        return jsonify({"error": f"Failed to connect to erp: {str(e)}"})
+ 
 
 @app.route("/")
 def hello_world():
