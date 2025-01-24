@@ -1,6 +1,6 @@
 from flask import Flask, render_template_string, request, jsonify
 import sqlite3
-import yaml
+
 
 app = Flask(__name__)
 
@@ -57,7 +57,7 @@ DOM:
           - Implementation of a Role is a 2-4 week process including testing.
 """
 
-config = yaml.safe_load(CONFIG_YAML)
+
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
