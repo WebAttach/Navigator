@@ -104,6 +104,79 @@ HTML_TEMPLATE = """
             }
 
         </script>
+        <script>
+
+(function () {
+    const colors = [
+        "#000000",       // Black
+        "#26234C",      // First color
+        "#4B5363",      // Warm dark gray with a bit of blue
+        "url('talofa.jpg')", // Background image with static path for Flask
+        "#666836"       // Park
+    ];
+
+    let index = 0;
+    const transitionDuration = 5000; // 5 seconds
+    const cycleDuration = 30000;    // 30 seconds
+
+    // Apply transition effect
+    const applyTransition = (element) => {
+        element.style.transition = `background ${transitionDuration / 1000}s ease-in-out, opacity ${transitionDuration / 1000}s ease-in-out`;
+    };
+
+    // Update background for elements
+    const updateBackground = () => {
+        const topBar = document.querySelector(".top-bar");
+        const bottomBar = document.querySelector(".bottom-bar");
+
+        if (topBar && bottomBar) {
+            const background = colors[index];
+
+            // Handle background images with smooth transitions
+            if (background.includes('url')) {
+                topBar.style.background = background;
+                topBar.style.backgroundSize = "cover";
+                topBar.style.backgroundRepeat = "no-repeat";
+                topBar.style.opacity = "0"; // Fade out first
+                setTimeout(() => {
+                    topBar.style.opacity = "1"; // Fade in smoothly
+                }, transitionDuration / 2);
+                bottomBar.style.background = "#26234C"; // Set bottom bar to #26234C when top is image
+            } else {
+                topBar.style.background = background;
+                topBar.style.backgroundSize = "";
+                topBar.style.backgroundRepeat = "";
+                topBar.style.opacity = "1"; // Ensure solid colors are fully visible
+                bottomBar.style.background = background; // Match bottom bar to top bar
+                bottomBar.style.backgroundSize = "";
+                bottomBar.style.backgroundRepeat = "";
+            }
+
+            index = (index + 1) % colors.length; // Cycle to the next color
+        }
+    };
+
+    // Initialize the rotation
+    const initBackgroundRotation = () => {
+        const topBar = document.querySelector(".top-bar");
+        const bottomBar = document.querySelector(".bottom-bar");
+
+        if (topBar && bottomBar) {
+            applyTransition(topBar);
+            applyTransition(bottomBar);
+
+            // Start the rotation
+            setInterval(updateBackground, cycleDuration);
+
+            // Apply the first background
+            updateBackground();
+        }
+    };
+
+    // Wait for the DOM to load before initializing
+    document.addEventListener("DOMContentLoaded", initBackgroundRotation);
+})();
+</script>
 </head>
 <body>
     <div class="top-bar">
