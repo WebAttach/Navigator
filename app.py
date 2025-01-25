@@ -45,6 +45,80 @@ HTML_TEMPLATE = """
            .hidden{display:none}
            .show{display:block}
     </style>
+    <style>
+.panel-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 50px;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 240px;
+    text-align: center;
+}
+
+.card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 15px;
+}
+
+.card h3 {
+    font-size: 18px;
+    margin: 15px 0 10px;
+    color: #333;
+}
+
+.due-date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.calendar-icon {
+    margin-right: 5px;
+    width: 16px;
+    height: 16px;
+}
+
+.card-footer {
+    background-color: #444;
+    padding: 10px;
+    border-radius: 0 0 15px 15px;
+    text-align: center;
+}
+
+.card-footer .continue-btn {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    cursor: pointer;
+    border-radius: 0 0 15px 15px;
+    margin: 0;
+}
+
+.card-footer .continue-btn:hover {
+    background-color: #666;
+    text-decoration: underline;
+}
+
+</style>    
     <script src="https://videopal.me/js/vp_player.min.js?v=1.1.29" data-cfasync="false"></script>
     <script>
         var vpPlayer = new VpPlayer({
@@ -62,6 +136,8 @@ HTML_TEMPLATE = """
                     window.open('/maps', '_blank');  
                 }else if (command ==='tasks') {
                     showTasks()
+                }else if (command ==='process') {
+                    showProcess()
                 }else if (command === 'cls') {
                     document.getElementById('main-section').innerHTML = '';
                 }else if (command.startsWith('lang-')) {
@@ -94,6 +170,17 @@ HTML_TEMPLATE = """
                     document.getElementById('main-section').innerHTML = `<p>Unknown command: ${command}</p>`;
                 }
             }
+        function showProcess() {
+            const processHTML = `
+                <div class="process-container">
+                    <h3>Enter Process Steps</h3>
+                    <textarea id="process-input" placeholder="Example: Start --> Review --> Approve"></textarea><br>
+                    <button onclick="updateDiagram()">Render Diagram</button>
+                    <div id="diagram" style="border: 1px solid #ccc; padding: 10px; margin-top: 10px; background-color: #f9f9f9;"></div>
+                </div>
+            `;
+            document.getElementById('main-section').innerHTML = processHTML;
+        }
             async function showTasks() {
                 var panh = `<div class="panel-container" id="panel-container">
                <div class="card"><img src="https://github.com/WebAttach/WebAttach/blob/fd2f9b87483893e7769f07d9f82a4137db73324e/panel_1.jpg?raw=true" alt="Legacy Report"><div class="card-content"><h3>Reports</h3><div class="due-date"><svg class="calendar-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 32 32" aria-hidden="true"><path d="M26,4h-4V2h-2v2h-8V2h-2v2H6C4.9,4,4,4.9,4,6v20c0,1.1,0.9,2,2,2h20c1.1,0,2-0.9,2-2V6C28,4.9,27.1,4,26,4z M26,26H6V12h20V26z M26,10H6V6h4v2h2V6h8v2h2V6h4V10z"></path></svg><span>12/15/2024</span></div></div><div class="card-footer"><a href="#" class="continue-btn" onclick="showIframe()">Proceed</a></div></div>
@@ -197,18 +284,8 @@ HTML_TEMPLATE = """
           <a href="#" event.preventDefault();">Purchase Requisition</a><br>
           <a href="#" event.preventDefault();">Add Task</a><br>
     </div>
-    <div class="main-section">
-        <div id="results" class="results show"></div>
-       <div class="db hidden">
-                <div class="db-header">
-                    <p><span>Next Dispatch in <span id="cycle-timer">300</span> seconds</span></p>
-                </div>
-                <div class="db-console">
-                    <textarea id="db-request" style="width:50%;" rows=3></textarea><br>
-                    <button onclick="executeDBCommand(this)">Dispatch Request</button><br><br>
-                    <textarea id="db-response" readonly style="width:50%;" rows=8></textarea><br>
-                </div>
-        </div>
+    <div class="main-section" id="main-section">
+
     </div>
        <div class="bottom-bar">
              <input type=\"text\" id=\"command-input\" >
