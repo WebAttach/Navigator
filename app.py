@@ -40,7 +40,6 @@ HTML_TEMPLATE = """
     <script>
            mermaid.initialize({ startOnLoad: true });
            function updateDiagram() {
-            alert("Line 43")
             const input = document.getElementById('process-input').value;
             const output = document.getElementById('diagram');
             const diagram = `graph TD\n${input}`;
@@ -107,7 +106,7 @@ HTML_TEMPLATE = """
             const processHTML = `
                 <div class="process-container">
                     <h3>Enter Process Steps</h3>
-                    <textarea id="process-input" placeholder="Example: Start --> Review --> Approve"></textarea><br>
+                    <textarea id="process-input" placeholder="Example: Start --> Review --> Approve">Start --> Review --> Approve</textarea><br>
                     <button onclick="updateDiagram()">Render Diagram</button>
                     <div id="diagram" style="border: 1px solid #ccc; padding: 10px; margin-top: 10px; background-color: #f9f9f9;"></div>
                 </div>
