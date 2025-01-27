@@ -1,7 +1,6 @@
 from flask import Flask, render_template_string, request, jsonify
 import sqlite3
-import nbformat
-from nbconvert import HTMLExporter
+
 
 app = Flask(__name__)
 
@@ -24,59 +23,7 @@ def init_db():
 
 init_db() 
 
-# Embedded Jupyter Notebook as JSON (this is a small example notebook)
-embedded_notebook = """
-{
- "cells": [
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "# Sample Jupyter Notebook\\n",
-    "This notebook is served directly from a Flask application."
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 1,
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "Hello from Flask Jupyter integration!\\n"
-     ]
-    }
-   ],
-   "source": [
-    "print(\\"Hello from Flask Jupyter integration!\\")"
-   ]
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.8.5"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 4
-}
-"""
+
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -121,36 +68,8 @@ HTML_TEMPLATE = """
                     window.open('/maps', '_blank');  
                 }else if (command ==='tasks') {
                     showTasks()
-                }else if (command ==='omni') {
-                     document.getElementById('main-section').innerHTML = `<p>Coming soon. Omniglot Ex omni-es</p>`;
-                }else if (command ==='book') {
-                     document.getElementById('main-section').innerHTML = `<p>Coming soon. Jupyter Report Book Ex book-bba</p>`;
-                }else if (command ==='mem') {
-                     document.getElementById('main-section').innerHTML = `<p><textarea>English|Genesis|1:1="In the beginning, God created the heavens and the earth.";1:2="And the earth was without form, and void.";2:1="Thus the heavens and the earth were finished.";French|Genese|1:1="Au commencement, Dieu crea les cieux et la terre.";1:2="Et la terre etait informe et vide.";2:1="Ainsi furent acheves les cieux et la terre.";Espanol|Salmos|119:105=Lampara es a mis pies tu palabra y luz para mi camino";119:106="He jurado y lo confirmare que guardare tus justas ordenanzas";119:107="Estoy profundamente afligido SENOR, vivificame conforme a tu palabra";</textarea><br><input></p>`;
-                }else if (command ==='odoo') {
-                     document.getElementById('main-section').innerHTML = `<p>Odoo conversion</p>`;
-                } else if (command === 'jup') {
-                    fetch('/load-notebook')
-                    .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.text(); // Get the HTML as plain text
-                })
-                .then(data => {
-                    // Update the main-section with the notebook content
-                    document.getElementById('main-section').innerHTML = data;
-                })
-                .catch(error => {
-                    console.error('Error fetching notebook:', error);
-                    document.getElementById('main-section').innerHTML = '<p>Error loading notebook</p>';
-                });
-
-
-                }else if (command ==='proc') {
+                }else if (command ==='process') {
                     showProcess()
-                }else if (command === 'ls') {
-                    document.getElementById('main-section').innerHTML = `<p>erp<br>maps<br>tasks<br>lang-es Hello World<br>omni-es<br>book<br>mem<br>lang<br>odoo<br>proc<br>jup Jupyter Report Book<br>cls</p>`;
                 }else if (command === 'cls') {
                     document.getElementById('main-section').innerHTML = '';
                 }else if (command.startsWith('lang-')) {
@@ -187,13 +106,7 @@ HTML_TEMPLATE = """
             const processHTML = `
                 <div class="process-container">
                     <h3>Enter Process Steps</h3>
-                    <textarea id="process-input" placeholder="Example: Start --> Review --> Approve">   Start[Choose Report] --> Finance[Finance Reports]
-    Start --> HR[HR Reports]
-    Finance --> Budget[Budget Summary]
-    Finance --> Expense[Expense Analysis]
-    HR --> Payroll[Payroll Summary]
-    HR --> Benefits[Benefits Report]
-</textarea><br>
+                    <textarea id="process-input" placeholder="Example: Start --> Review --> Approve">Start --> Review --> Approve</textarea><br>
                     <button onclick="updateDiagram()">Render Diagram</button>
                     <div id="diagram" style="border: 1px solid #ccc; padding: 10px; margin-top: 10px; background-color: #f9f9f9;"></div>
                 </div>
@@ -217,7 +130,7 @@ HTML_TEMPLATE = """
         "#000000",       // Black
         "#26234C",      // First color
         "#4B5363",      // Warm dark gray with a bit of blue
-        "url('https://github.com/WebAttach/Navigator/blob/c4272ca4c8e2e3b08c6d4a4b9ad19ccdb38fbd68/talofa.jpg?raw=true')", // Background image with static path for Flask
+        "url('talofa.jpg')", // Background image with static path for Flask
         "#666836"       // Park
     ];
 
@@ -369,29 +282,6 @@ def erp():
         """
     except Exception as e:
         return jsonify({"error": f"Failed to connect to erp: {str(e)}"})
- 
-@app.route('/load-notebook')
-def load_notebook():
-    # Load the notebook from the embedded JSON string
-    notebook_node = nbformat.reads(embedded_notebook, as_version=4)
-
-    # Convert the notebook to HTML using nbconvert
-    html_exporter = HTMLExporter()
-    html_exporter.template_name = "classic"
-    (body, _) = html_exporter.from_notebook_node(notebook_node)
-
-    # Render the notebook in a Flask response
-    return render_template_string(f"""
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <title>Embedded Jupyter Notebook</title>
-    </head>
-    <body>
-        {body}
-    </body>
-    </html>
-    """)
  
 
 @app.route("/")
