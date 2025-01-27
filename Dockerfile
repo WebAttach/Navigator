@@ -7,8 +7,16 @@ WORKDIR /app
 # Copy the current directory contents into the container
 COPY . /app
 
-# Install any needed packages
-RUN pip install flask
+# Install system-level dependencies required by nbconvert
+RUN apt-get update && apt-get install -y \
+    pandoc \
+    texlive-xetex \
+    texlive-fonts-recommended \
+    texlive-plain-generic \
+    && apt-get clean
+
+# Install Python dependencies from requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Set environment variable for Flask
 ENV FLASK_APP=app:app
