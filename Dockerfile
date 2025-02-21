@@ -1,27 +1,24 @@
-# Start with a slim Python image
+# Start with the official Python image
 FROM python:3.12-slim
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Upgrade pip
-RUN python -m pip install --upgrade pip
-
-# Copy the requirements file to the container
+# Copy the requirements.txt file to the container
 COPY requirements.txt /app/
 
-# Install dependencies
-RUN pip install --no-cache-dir -v -r requirements.txt
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application files to the container
+# Copy the rest of the application code to the container
 COPY . /app/
 
-# Expose port 5000 for Flask
+# Expose the Flask app port
 EXPOSE 5000
 
-# Set the environment variable for Flask
+# Set environment variables for Flask
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
 
-# Run Flask application
+# Run the Flask app
 CMD ["flask", "run"]
