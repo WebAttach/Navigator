@@ -17,7 +17,7 @@ def index():
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Flask App</title>
+        <title>Fund Masters</title>
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -76,7 +76,7 @@ def index():
     <body>
 
         <div class="header">
-            <h1>My Simple Flask App</h1>
+            <h1>Fund Masters</h1>
         </div>
 
         <div class="main-content">
@@ -85,7 +85,7 @@ def index():
                 <a href="#">Home</a>
                 <a href="#">About</a>
                 <a href="#">Contact</a>
-                <a href="{{ url_for('serve_static_file', filename='SampleSummary.pdf') }}" target="_blank">Sample Summary</a>
+                <a href="{{ url_for('serve_static_file', filename='SampleSummary.pdf') }}" target="_blank">Fund Summary</a>
             </div>
             <div class="right-section">
                 <h3>Welcome to the Flask App</h3>
