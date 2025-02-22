@@ -88,8 +88,8 @@ def index():
                 <a href="{{ url_for('serve_static_file', filename='SampleSummary.pdf') }}" target="_blank">Fund Summary</a>
             </div>
             <div class="right-section">
-                <h3>Welcome to the Flask App</h3>
-                <p>This is the main content area.</p>
+                <h3>Welcome to Fund Masters</h3>
+                <p>30 Minute Master Class.</p>
             </div>
         </div>
 
