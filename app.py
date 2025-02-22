@@ -1,6 +1,12 @@
-from flask import Flask, render_template_string
+from flask import Flask, render_template_string, send_from_directory
+import os
 
 app = Flask(__name__)
+
+# Serve the PDF from the static folder
+@app.route('/static/<filename>')
+def serve_static_file(filename):
+    return send_from_directory(os.path.join(app.root_path, 'static'), filename)
 
 @app.route('/')
 def index():
@@ -79,6 +85,7 @@ def index():
                 <a href="#">Home</a>
                 <a href="#">About</a>
                 <a href="#">Contact</a>
+                <a href="{{ url_for('serve_static_file', filename='SampleSummary.pdf') }}" target="_blank">Sample Summary</a>
             </div>
             <div class="right-section">
                 <h3>Welcome to the Flask App</h3>
