@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string, send_from_directory, redirect, url_for
+from flask import Flask, render_template_string, send_from_directory, redirect, url_for, request
 import os
 import pdfplumber
 
@@ -19,7 +19,16 @@ def extract_pdf_text(pdf_path):
 
 @app.route('/')
 def index():
-    # Simple layout with a header, left menu, and main content
+    # Simple cart items for demonstration
+    cart_items = [
+        {"product": "Whole Life", "tax": "UR", "estimated_price": 76},
+        {"product": "Term Life", "tax": "UR", "estimated_price": 52},
+        {"product": "Health Insurance", "tax": "UR", "estimated_price": 32},
+    ]
+
+    # Get PDF content from the URL parameter (or initialize empty)
+    pdf_content = request.args.get('pdf_content', '')
+
     return render_template_string("""
     <!DOCTYPE html>
     <html lang="en">
@@ -95,6 +104,18 @@ def index():
                 border: 1px solid #ccc;
                 resize: none;
             }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            table, th, td {
+                border: 1px solid black;
+            }
+            th, td {
+                padding: 10px;
+                text-align: left;
+            }
         </style>
     </head>
     <body>
@@ -112,8 +133,29 @@ def index():
             </div>
             <div class="right-section">
                 <h3>PDF Content:</h3>
-                <!-- Textarea for PDF content, initially empty -->
-                <textarea id="pdf-content" readonly></textarea>
+                <!-- Textarea for PDF content -->
+                <textarea id="pdf-content" readonly>{{ pdf_content }}</textarea>
+
+                <h3>Shopping Cart</h3>
+                <!-- Table for shopping cart -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Tax</th>
+                            <th>Estimated Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                        <tr>
+                            <td>{{ item.product }}</td>
+                            <td>{{ item.tax }}</td>
+                            <td>${{ item.estimated_price }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -122,31 +164,18 @@ def index():
             <button onclick="alert('Command sent')">Run Command</button>
         </div>
 
-        <script>
-            // JavaScript to load PDF content dynamically when the "Shop Solutions" link is clicked
-            document.querySelector('a[href="{{ url_for('shopping_cart') }}"]').addEventListener('click', function(event) {
-                event.preventDefault();  // Prevent default link behavior
-                fetch('/shopping_cart')  // Fetch the content dynamically
-                    .then(response => response.text())
-                    .then(data => {
-                        document.getElementById('pdf-content').value = data;  // Insert content into textarea
-                    })
-                    .catch(error => console.error('Error fetching PDF content:', error));
-            });
-        </script>
-
     </body>
     </html>
-    """)
+    """, cart_items=cart_items, pdf_content=pdf_content)
 
 @app.route('/shopping_cart')
 def shopping_cart():
-    # Extract content from PDF when the shopping cart is clicked
+    # Extract content from PDF only when shopping cart is clicked
     pdf_path = os.path.join(app.root_path, 'static', 'SampleSummary.pdf')
     pdf_content = extract_pdf_text(pdf_path)
     
-    # Return the extracted content directly as plain text
-    return pdf_content
+    # Redirect to the index page with extracted PDF content
+    return redirect(url_for('index', pdf_content=pdf_content))
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
