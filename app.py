@@ -102,7 +102,7 @@ def index():
                 <a href="#">About</a>
                 <a href="#">Contact</a>
                 <a href="{{ url_for('serve_static_file', filename='SampleSummary.pdf') }}" target="_blank">Fund Summary</a>
-                <a href="{{ url_for('shopping_cart') }}">Shopping Cart (Coverage, Tax Free, Finance Check Up)</a>
+                <a href="{{ url_for('shopping_cart') }}">Shopping Cart</a>
                 <a href="#">Build Loyalty</a>
             </div>
             <div class="right-section">
