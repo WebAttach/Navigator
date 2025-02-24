@@ -9,6 +9,14 @@ app = Flask(__name__)
 def serve_static_file(filename):
     return send_from_directory(os.path.join(app.root_path, 'static'), filename)
 
+# Function to extract text from PDF
+def extract_pdf_text(pdf_path):
+    text = ""
+    with pdfplumber.open(pdf_path) as pdf:
+        for page in pdf.pages:
+            text += page.extract_text() + "\n"
+    return text
+
 @app.route('/')
 def index():
     # Simple layout with a header, left menu, and main content
