@@ -98,12 +98,9 @@ def index():
         <div class="main-content">
             <div class="left-section">
                 <h3>Menu</h3>
-                <a href="#">Home</a>
-                <a href="#">About</a>
-                <a href="#">Contact</a>
-                <a href="{{ url_for('serve_static_file', filename='SampleSummary.pdf') }}" target="_blank">Fund Summary</a>
-                <a href="{{ url_for('shopping_cart') }}">Shopping Cart</a>
-                <a href="#">Build Loyalty</a>
+                <a href="#">Get Coaching</a>
+                <a href="{{ url_for('serve_static_file', filename='SampleSummary.pdf') }}" target="_blank">View Funds</a>
+                <a href="{{ url_for('shopping_cart') }}">Shop Solutions</a>
             </div>
             <div class="right-section">
                 <h3>PDF Content:</h3>
