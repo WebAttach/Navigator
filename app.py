@@ -1,5 +1,6 @@
 from flask import Flask, render_template_string, send_from_directory
 import os
+import pdfplumber
 
 app = Flask(__name__)
 
@@ -8,8 +9,22 @@ app = Flask(__name__)
 def serve_static_file(filename):
     return send_from_directory(os.path.join(app.root_path, 'static'), filename)
 
+# Function to extract text from PDF
+def extract_pdf_text(pdf_path):
+    text = ""
+    with pdfplumber.open(pdf_path) as pdf:
+        for page in pdf.pages:
+            text += page.extract_text() + "\n"
+    return text
+
 @app.route('/')
 def index():
+    # Path to your PDF
+    pdf_path = os.path.join(app.root_path, 'static', 'SampleSummary.pdf')
+    
+    # Extract content from PDF
+    pdf_content = extract_pdf_text(pdf_path)
+    
     # Simple layout with a header, left menu, and main content
     return render_template_string("""
     <!DOCTYPE html>
@@ -55,6 +70,7 @@ def index():
             .right-section {
                 flex: 1;
                 padding: 20px;
+                overflow-y: scroll;
             }
             .footer input {
                 width: 80%;
@@ -71,6 +87,12 @@ def index():
             .footer button:hover {
                 background-color: #555;
             }
+            pre {
+                white-space: pre-wrap;       /* CSS3 */
+                white-space: -moz-pre-wrap;  /* Mozilla */
+                white-space: -pre-wrap;      /* Opera 4-6 */
+                word-wrap: break-word;       /* Internet Explorer 5.5+ */
+            }
         </style>
     </head>
     <body>
@@ -86,12 +108,12 @@ def index():
                 <a href="#">About</a>
                 <a href="#">Contact</a>
                 <a href="{{ url_for('serve_static_file', filename='SampleSummary.pdf') }}" target="_blank">Fund Summary</a>
-                <a href="#">Shopping Cart (Coverage, Tax Free, Finance Check Up</a>
+                <a href="#">Shopping Cart (Coverage, Tax Free, Finance Check Up)</a>
                 <a href="#">Build Loyalty</a>
             </div>
             <div class="right-section">
-                <h3>Welcome to Fund Masters</h3>
-                <p>30 Minute Master Class.</p>
+                <h3>PDF Content:</h3>
+                <pre>{{ pdf_content }}</pre>  <!-- Display the extracted PDF text here -->
             </div>
         </div>
 
@@ -102,7 +124,7 @@ def index():
 
     </body>
     </html>
-    """)
+    """, pdf_content=pdf_content)
 
 if __name__ == '__main__':
     app.run(debug=True)
