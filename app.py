@@ -87,6 +87,14 @@ def index():
                 white-space: -pre-wrap;      /* Opera 4-6 */
                 word-wrap: break-word;       /* Internet Explorer 5.5+ */
             }
+            textarea {
+                width: 100%;
+                height: 300px;
+                padding: 10px;
+                font-family: monospace;
+                border: 1px solid #ccc;
+                resize: none;
+            }
         </style>
     </head>
     <body>
@@ -104,7 +112,8 @@ def index():
             </div>
             <div class="right-section">
                 <h3>PDF Content:</h3>
-                <pre>{{ pdf_content }}</pre>  <!-- Display the extracted PDF text here -->
+                <!-- Textarea for PDF content, initially empty -->
+                <textarea id="pdf-content" readonly></textarea>
             </div>
         </div>
 
@@ -113,9 +122,22 @@ def index():
             <button onclick="alert('Command sent')">Run Command</button>
         </div>
 
+        <script>
+            // JavaScript to load PDF content dynamically when the "Shop Solutions" link is clicked
+            document.querySelector('a[href="{{ url_for('shopping_cart') }}"]').addEventListener('click', function(event) {
+                event.preventDefault();  // Prevent default link behavior
+                fetch('/shopping_cart')  // Fetch the content dynamically
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('pdf-content').value = data;  // Insert content into textarea
+                    })
+                    .catch(error => console.error('Error fetching PDF content:', error));
+            });
+        </script>
+
     </body>
     </html>
-    """, pdf_content="")
+    """)
 
 @app.route('/shopping_cart')
 def shopping_cart():
@@ -123,22 +145,8 @@ def shopping_cart():
     pdf_path = os.path.join(app.root_path, 'static', 'SampleSummary.pdf')
     pdf_content = extract_pdf_text(pdf_path)
     
-    # Redirect back to the index page with the extracted PDF content
-    return render_template_string("""
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Fund Masters</title>
-    </head>
-    <body>
-        <h3>Shopping Cart & PDF Extraction</h3>
-        <pre>{{ pdf_content }}</pre>
-        <a href="{{ url_for('index') }}">Back to Main Page</a>
-    </body>
-    </html>
-    """, pdf_content=pdf_content)
+    # Return the extracted content directly as plain text
+    return pdf_content
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
