@@ -1,7 +1,6 @@
 import os
 import pdfplumber
 import sqlite3
-import pandas as pd
 
 from flask import Flask, render_template_string, send_from_directory, redirect, url_for, request
 
