@@ -19,6 +19,31 @@ def extract_pdf_text(pdf_path):
             text += page.extract_text() + "\n"
     return text
 
+# Initialize SQLite Database
+def init_db():
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS cart (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    product TEXT,
+                    tax TEXT,
+                    estimated_price REAL)''')
+    conn.commit()
+    conn.close()
+
+# Insert sample data into SQLite
+def insert_sample_data():
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    cart_data = [
+        ("Whole Life", "UR", 76),
+        ("Term Life", "UR", 52),
+        ("Health Insurance", "UR", 32)
+    ]
+    c.executemany("INSERT INTO cart (product, tax, estimated_price) VALUES (?, ?, ?)", cart_data)
+    conn.commit()
+    conn.close()
+
 @app.route('/')
 def index():
     # Simple cart items for demonstration
