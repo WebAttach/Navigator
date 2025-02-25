@@ -48,7 +48,7 @@ def index():
                 height: 100vh;
             }
             .header, .footer {
-                background-color: #222;
+                background-color: #26234C;
                 color: white;
                 padding: 10px;
                 text-align: center;
