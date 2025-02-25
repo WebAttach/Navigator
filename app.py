@@ -30,14 +30,6 @@ def index():
 
     # Get PDF content from the URL parameter (or initialize empty)
     pdf_content = request.args.get('pdf_content', '')
-
-    # Fetch cart items from SQLite
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-    c.execute("SELECT * FROM cart")
-    cart_items = c.fetchall()
-    conn.close()
-
     
     return render_template_string("""
     <!DOCTYPE html>
