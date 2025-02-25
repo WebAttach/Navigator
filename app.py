@@ -213,4 +213,6 @@ def shopping_cart():
     return redirect(url_for('index', pdf_content=pdf_content))
 
 if __name__ == '__main__':
+    init_db()  # Initialize the database when the app starts
+    insert_sample_data()  # Insert some sample data into the DB
     app.run(debug=True, host='0.0.0.0', port=5000)
